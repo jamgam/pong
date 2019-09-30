@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import openSocket from 'socket.io-client';
 import Board from './Board';
+import * as sc from '../styled-components/sc.App';
 
 const socket = openSocket('http://localhost:3000');
 
@@ -16,12 +17,6 @@ const init = (cb1, cb2) => {
       cb2(0);
     }
     console.log('PLAYER: ', player);
-  });
-};
-
-const opponent = (cb) => {
-  socket.on('opponent', (id) => {
-    cb(id);
   });
 };
 
@@ -41,16 +36,28 @@ const ball = (cb) => {
   });
 };
 
+const resetGame = () => {
+  socket.emit('reset', true);
+};
+
+const countDown = (cb) => {
+  socket.on('counter', (count) => {
+    cb(count);
+  });
+};
+
 const App = (props) => {
-  console.log(':)');
   const [pos, setPos] = useState([200, 200]);
   const [player, setPlayer] = useState(null);
   const [opp, setOpp] = useState(null);
   const [ballPos, setBallPos] = useState([347, 253]);
+  const [counter, setCounter] = useState(null);
+
   useEffect(() => {
     init(setPlayer, setOpp);
     positions(setPos);
     ball(setBallPos);
+    countDown(setCounter);
   }, []);
 
   const handleKey = (e) => {
@@ -62,19 +69,35 @@ const App = (props) => {
     }
   };
 
+  const reset = () => {
+    resetGame();
+  };
+
   if (player === null) {
     return null;
   }
-  return (
-    <div>
-      <button onKeyDown={handleKey}>
-        <Board leftPos={pos[0]} rightPos={pos[1]} ballPos={ballPos} />
-      </button>
+  if (player < 2) {
+    return (
       <div>
-        {player ? 'you are right' : 'you are left'}
+        <sc.BoardWrapper type="button" onKeyDown={handleKey}>
+          <Board
+            leftPos={pos[0]}
+            rightPos={pos[1]}
+            ballPos={ballPos}
+            counter={counter}
+          />
+        </sc.BoardWrapper>
+        <div>
+          {player ? 'you are right' : 'you are left'}
+        </div>
+        <div>
+          <button type="button" onClick={reset}>
+            reset
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default App;

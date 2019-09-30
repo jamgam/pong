@@ -1,13 +1,16 @@
-import React, { useEffect, useContext } from 'react';
+import React from 'react';
 import Player from './Player';
 import Ball from './Ball';
+import Counter from './Counter';
 import * as sc from '../styled-components/sc.Board';
-import { usePlayerPositionsContext, PlayerPositionsContext } from '../context/PlayerPositions';
 
 const Board = (props) => {
-  const { leftPos, rightPos, ballPos } = props;
+  const {
+    leftPos, rightPos, ballPos, counter,
+  } = props;
   return (
     <sc.Board>
+      <Counter counter={counter} />
       <Player player="left" pos={leftPos} />
       <Player player="right" pos={rightPos} />
       <Ball pos={ballPos} />

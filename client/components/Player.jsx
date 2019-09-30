@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import * as sc from '../styled-components/sc.Player';
-import { PlayerPositionsContext } from '../context/PlayerPositions';
 
 
 const Player = (props) => (
