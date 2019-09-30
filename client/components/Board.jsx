@@ -10,7 +10,6 @@ const Board = (props) => {
   } = props;
   return (
     <sc.Board>
-      <GameText gameText={gameText} />
       <Player player="left" pos={leftPos} />
       <Player player="right" pos={rightPos} />
       <Ball pos={ballPos} />

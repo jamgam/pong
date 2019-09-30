@@ -14,9 +14,7 @@ export const login = (cb) => {
 };
 
 export const onPlayerPositionsUpdate = (cb) => {
-  socket.on('playerPosition', (pos) => {
-    cb(pos);
-  });
+  socket.on('playerPosition', cb);
 };
 
 export const movePlayer = (player, direction) => {
@@ -24,9 +22,7 @@ export const movePlayer = (player, direction) => {
 };
 
 export const onBallUpdate = (cb) => {
-  socket.on('ballPosition', (pos) => {
-    cb(pos);
-  });
+  socket.on('ballPosition', cb);
 };
 
 export const restartGame = () => {
@@ -34,13 +30,17 @@ export const restartGame = () => {
 };
 
 export const onCounterDownUpdate = (cb) => {
-  socket.on('gameText', (count) => {
-    cb(count);
-  });
+  socket.on('gameText', cb);
 };
 
 export const onUsersUpdate = (cb) => {
-  socket.on('usersList', (users) => {
-    cb(users);
-  });
+  socket.on('usersList', cb);
+};
+
+export const postMessage = (msg) => {
+  socket.emit('message', msg);
+};
+
+export const onChatUpdate = (cb) => {
+  socket.on('chatMessage', cb);
 };

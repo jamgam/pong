@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import UsersList from './UsersList';
 import Header from './Header';
+import Chat from './Chat';
+import GameText from './GameText';
 import * as sc from '../styled-components/sc.App';
 import * as socket from '../socket';
 
-const App = (props) => {
+const App = () => {
   const [pos, setPos] = useState([200, 200]);
   const [player, setPlayer] = useState(null);
   const [ballPos, setBallPos] = useState([347, 253]);
   const [gameText, setGameText] = useState(null);
   const [users, setUsers] = useState({});
+  const [chat, setChat] = useState(['test']);
 
   useEffect(() => {
     socket.login(setPlayer);
@@ -18,6 +21,7 @@ const App = (props) => {
     socket.onBallUpdate(setBallPos);
     socket.onCounterDownUpdate(setGameText);
     socket.onUsersUpdate(setUsers);
+    socket.onChatUpdate(setChat);
   }, []);
 
   useEffect(() => {
@@ -30,19 +34,9 @@ const App = (props) => {
 
   const handleKey = (e) => {
     if (e.key === 'ArrowDown') {
-      // const newPos = [...pos];
-      // if (newPos[player] < 420) {
-      //   newPos[player] += 25;
-      // }
-      // setPos(newPos);
       socket.movePlayer(player - 1, 'down');
     }
     if (e.key === 'ArrowUp') {
-      // const newPos = [...pos];
-      // if (newPos[player] > 0) {
-      //   newPos[player] -= 25;
-      // }
-      // setPos(newPos);
       socket.movePlayer(player - 1, 'up');
     }
   };
@@ -53,12 +47,12 @@ const App = (props) => {
 
   const playerName = () => {
     if (player === 1) {
-      return 'left';
+      return 'THE LEFT PLAYER';
     }
     if (player === 2) {
-      return 'right';
+      return 'THE RIGHT PLAYER';
     }
-    return 'a spectator';
+    return 'A SPECTATOR';
   };
 
   if (player === null) {
@@ -66,20 +60,24 @@ const App = (props) => {
   }
   if (player >= 0) {
     return (
-      <div>
-        <Header header={users} player={player} />
+      <sc.App>
         <div>
-          <sc.BoardWrapper type="button">
-            <Board
-              leftPos={pos[0]}
-              rightPos={pos[1]}
-              ballPos={ballPos}
-              gameText={gameText}
-            />
-          </sc.BoardWrapper>
+          <Header header={users} player={player} />
         </div>
+        <sc.FlexDiv>
+          <GameText gameText={gameText} />
+          <Board
+            leftPos={pos[0]}
+            rightPos={pos[1]}
+            ballPos={ballPos}
+            gameText={gameText}
+          />
+          <Chat chat={chat} />
+        </sc.FlexDiv>
         <div>
-          {`you are ${playerName()}`}
+          <span>
+            {`YOU ARE ${playerName()}`}
+          </span>
         </div>
         <div>
           <button type="button" onClick={reset}>
@@ -87,7 +85,7 @@ const App = (props) => {
           </button>
         </div>
         <UsersList users={users} />
-      </div>
+      </sc.App>
     );
   }
 };

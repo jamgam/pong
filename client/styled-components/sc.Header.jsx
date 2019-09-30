@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Header = styled.div`
 font-family: Courier New;
 display: inline-block;
-width: 705px;
+width: 702px;
 `;
 
 export const Left = styled.span`

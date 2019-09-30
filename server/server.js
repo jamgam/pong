@@ -37,7 +37,9 @@ io.on('connection', (socket) => {
     clientRoom = room;
     if (rooms[room] === undefined) {
       game = new Game(emitBall, emitPlayerPosition, emitGameText, room);
-      rooms[room] = { game, numClients: 1, connected: {} };
+      rooms[room] = {
+        game, numClients: 1, connected: {}, messages: [],
+      };
       console.log('ROOM CREATED: ', room);
     } else {
       game = rooms[room].game;
@@ -46,15 +48,29 @@ io.on('connection', (socket) => {
     const player = game.addPlayer(socket.id);
     rooms[room].connected[socket.id] = player;
     io.to(room).emit('usersList', rooms[room].connected);
+    io.to(room).emit('chatMessage', rooms[clientRoom].messages);
     socket.emit('loggedIn', player);
   });
 
   socket.on('movePlayer', ({ player, direction }) => {
-    game.movePlayer(player, direction);
+    if (game) {
+      game.movePlayer(player, direction);
+    }
   });
 
   socket.on('restartGame', () => {
-    game.restartGame();
+    if (game) {
+      game.restartGame();
+    }
+  });
+
+  socket.on('message', (msg) => {
+    console.log(msg);
+    rooms[clientRoom].messages.push({
+      user: socket.id,
+      msg,
+    });
+    io.to(clientRoom).emit('chatMessage', rooms[clientRoom].messages);
   });
 
   socket.on('disconnect', () => {

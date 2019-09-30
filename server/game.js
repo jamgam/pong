@@ -13,7 +13,7 @@ const Game = function Game(emitBall, emitPlayer, emitText, room) {
   this.player1 = null;
   this.player2 = null;
   this.room = room;
-  this.gameStarted = false;
+  this.countingDown = false;
 
   // game speed
   this.speed = 25;
@@ -24,7 +24,7 @@ const Game = function Game(emitBall, emitPlayer, emitText, room) {
   this.leftBound = 10;
   this.rightBound = 690;
   this.upperBound = 1;
-  this.lowerBound = 498;
+  this.lowerBound = 499;
 
   // emitters
   this.emitBall = emitBall;
@@ -38,33 +38,33 @@ Game.prototype.startGame = function startGame() {
   this.ballDirection = 'upright';
   this.counter = 3;
   this.step = 3;
-  this.endGame();
 
   this.emitBall(this.room, this.ballPosition);
   this.countDown();
 };
 
 Game.prototype.countDown = function countDown() {
+  this.countingDown = true;
   this.emitText(this.room, this.counter);
   this.counterInterval = setInterval(() => {
     if (this.counter > 0) {
       this.counter -= 1;
       this.emitText(this.room, this.counter);
-    }
-    if (this.counter === 0) {
-      this.emitText(this.room, 'start!');
-      clearInterval(this.counterInterval);
-      setTimeout(() => {
-        this.emitText(this.room, null);
-      }, 400);
-      this.playBall();
+      if (this.counter === 0) {
+        this.emitText(this.room, 'start!');
+        clearInterval(this.counterInterval);
+        this.countingDown = false;
+        setTimeout(() => {
+          this.emitText(this.room, null);
+        }, 400);
+        this.endGame();
+        this.playBall();
+      }
     }
   }, 1000);
 };
 
 Game.prototype.playBall = function playBall() {
-  this.endGame();
-  this.gameStarted = true;
   this.gameInterval = setInterval(() => {
     // update ball position
     switch (this.ballDirection) {
@@ -162,12 +162,11 @@ Game.prototype.movePlayer = function movePlayer(player, direction) {
 };
 
 Game.prototype.endGame = function endGame() {
-  if (this.gameStarted) {
+  if (this.countingDown) {
     this.emitText(this.room, null);
   }
   clearInterval(this.gameInterval);
   clearInterval(this.counterInterval);
-  this.gameStarted = false;
 };
 
 Game.prototype.updatePlayerPositons = function updatePlayerPositons() {
