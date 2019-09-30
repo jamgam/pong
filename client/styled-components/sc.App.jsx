@@ -13,3 +13,19 @@ export const FlexDiv = styled.div`
 display: inline-flex;
 max-height: 507px;
 `;
+
+export const Footer = styled.div`
+width: 700px;
+`;
+
+export const Restart = styled.button`
+float: right;
+background-color: black;
+color: white;
+font-family: Courier New;
+height: 25px;
+width: 65px;
+border: solid white 1px;
+box-shadow: 0 0 0 2px black;
+margin-right: 2px;
+`;

@@ -75,18 +75,16 @@ const App = () => {
           <UsersList users={users} />
           <Chat chat={chat} />
         </sc.FlexDiv>
-        <div>
+        <sc.Footer>
           <b>
             {`YOU ARE ${playerName()}`}
           </b>
-        </div>
-        <div>
           {player < 3 ? (
-            <button type="button" onClick={reset}>
+            <sc.Restart type="button" onClick={reset}>
             reset
-            </button>
+            </sc.Restart>
           ) : null}
-        </div>
+        </sc.Footer>
       </sc.App>
     );
   }
