@@ -46,7 +46,7 @@ Game.prototype.countDown = function countDown() {
       clearInterval(i);
       setTimeout(() => {
         this.emitCounter(null);
-      }, 200);
+      }, 400);
       this.playBall();
     } else {
       this.counter -= 1;
