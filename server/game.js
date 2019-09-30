@@ -1,4 +1,4 @@
-const Game = function Game(emitBall, emitPlayer, emitCounter) {
+const Game = function Game(emitBall, emitPlayer, emitText, room) {
   // game state
   this.counter = 3;
   this.gameover = false;
@@ -11,6 +11,9 @@ const Game = function Game(emitBall, emitPlayer, emitCounter) {
   this.gameInterval = null;
   this.player0 = null;
   this.player1 = null;
+
+  //
+  this.room = room;
 
   // game speed
   this.speed = 25;
@@ -26,7 +29,7 @@ const Game = function Game(emitBall, emitPlayer, emitCounter) {
   // emitters
   this.emitBall = emitBall;
   this.emitPlayer = emitPlayer;
-  this.emitCounter = emitCounter;
+  this.emitText = emitText;
 };
 
 Game.prototype.startGame = function startGame() {
@@ -37,17 +40,20 @@ Game.prototype.startGame = function startGame() {
   this.step = 3;
   this.gameover = false;
 
-  this.emitBall(this.ballPosition);
+  this.emitBall(this.room, this.ballPosition);
   this.countDown();
 };
 
 Game.prototype.countDown = function countDown() {
   const i = setInterval(() => {
-    this.emitCounter(this.counter);
+    if (this.counter > 0) {
+      this.emitText(this.room, this.counter);
+    }
     if (this.counter === 0) {
+      this.emitText(this.room, 'start!');
       clearInterval(i);
       setTimeout(() => {
-        this.emitCounter(null);
+        this.emitText(this.room, null);
       }, 400);
       this.playBall();
     } else {
@@ -129,7 +135,7 @@ Game.prototype.playBall = function playBall() {
     }
 
     // update ball
-    this.emitBall(this.ballPosition);
+    this.emitBall(this.room, this.ballPosition);
 
     // check conditions
     if (this.gameover) {
@@ -162,7 +168,7 @@ Game.prototype.endGame = function endGame() {
 };
 
 Game.prototype.updatePlayerPositons = function updatePlayerPositons() {
-  this.emitPlayer(this.playerPositions);
+  this.emitPlayer(this.room, this.playerPositions);
 };
 
 Game.prototype.restartGame = function restartGame() {
@@ -189,6 +195,7 @@ Game.prototype.addPlayer = function addPlayer(id) {
 };
 
 Game.prototype.leaveGame = function leaveGame(playerNum) {
+  console.log(playerNum, ' LEFT');
   if (playerNum < 2) {
     const player = `player${playerNum}`;
     this[player] = null;

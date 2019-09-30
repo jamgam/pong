@@ -8,7 +8,7 @@ export const Counter = styled.div`
   height: 504px;
   display: inline-flex;
   align-items: center;
-  font-size: 256px;
+  font-size: 180px;
   justify-content: center;
 
 `;

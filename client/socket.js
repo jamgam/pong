@@ -3,7 +3,8 @@ import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3000');
 
 export const login = (cb) => {
-  socket.emit('login', null);
+  const roomNum = document.URL.split('/')[3];
+  socket.emit('join', roomNum);
   socket.on('loggedIn', (player) => {
     cb(player);
     console.log('YOU ARE PLAYER: ', player);
@@ -11,27 +12,27 @@ export const login = (cb) => {
 };
 
 export const onPlayerPositionsUpdate = (cb) => {
-  socket.on('update', (pos) => {
+  socket.on('playerPosition', (pos) => {
     cb(pos);
   });
 };
 
 export const movePlayer = (player, direction) => {
-  socket.emit('move', { player, direction });
+  socket.emit('movePlayer', { player, direction });
 };
 
 export const onBallUpdate = (cb) => {
-  socket.on('ball', (pos) => {
+  socket.on('ballPosition', (pos) => {
     cb(pos);
   });
 };
 
-export const resetGame = () => {
-  socket.emit('reset', true);
+export const restartGame = () => {
+  socket.emit('restartGame', true);
 };
 
 export const onCounterDownUpdate = (cb) => {
-  socket.on('counter', (count) => {
+  socket.on('gameText', (count) => {
     cb(count);
   });
 };

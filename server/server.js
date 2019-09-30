@@ -7,56 +7,69 @@ const Game = require('./game');
 
 app.use('/:id', express.static('public'));
 
-const connected = {};
-let players = 0;
+const rooms = {};
 
-const testGame = new Game(
-  (ball) => {
-    io.emit('ball', ball);
-  },
-  (playerPos) => {
-    io.emit('update', playerPos);
-  },
-  (counter) => {
-    io.emit('counter', counter);
-  },
-);
+const emitBall = (room, ballPosition) => {
+  io.to(room).emit('ballPosition', ballPosition);
+};
+
+const emitPlayerPosition = (room, playerPosition) => {
+  io.to(room).emit('playerPosition', playerPosition);
+};
+
+const emitGameText = (room, gameText) => {
+  io.to(room).emit('gameText', gameText);
+};
+
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  // login
-  socket.on('login', () => {
-    const player = testGame.addPlayer(socket.id);
-    connected[socket.id] = player;
+  let game;
+  let clientRoom;
+
+  // join room
+  socket.on('join', (room) => {
+    socket.join(room);
+    clientRoom = room;
+    if (rooms[room] === undefined) {
+      game = new Game(emitBall, emitPlayerPosition, emitGameText, room);
+      rooms[room] = { game, numClients: 1, connected: {} };
+      console.log('ROOM CREATED: ', room);
+    } else {
+      game = rooms[room].game;
+      rooms[room].numClients += 1;
+    }
+    const player = game.addPlayer(socket.id);
+    rooms[room].connected[socket.id] = player;
     socket.emit('loggedIn', player);
-    testGame.updatePlayerPositons();
-    players += 1;
-    console.log(`USER: ${socket.id} logged in`);
-    console.log('CONNECTED: ', connected);
   });
 
   // move
-  socket.on('move', ({ player, direction }) => {
-    testGame.movePlayer(player, direction);
+  socket.on('movePlayer', ({ player, direction }) => {
+    game.movePlayer(player, direction);
   });
 
   // reset
-  socket.on('reset', () => {
-    testGame.restartGame();
+  socket.on('restartGame', () => {
+    game.restartGame();
   });
 
   socket.on('disconnect', () => {
-    if (connected[socket.id] !== undefined) {
-      console.log(`USER: ${socket.id} logged out`);
-      testGame.leaveGame(connected[socket.id]);
-      delete connected[socket.id];
-      players -= 1;
-      console.log('PLAYERS: ', players);
+    if (rooms[clientRoom]) {
+      rooms[clientRoom].numClients -= 1;
+      if (rooms[clientRoom].numClients === 0) {
+        delete rooms[clientRoom];
+        console.log('ROOM DELETED: ', clientRoom);
+      } else {
+        console.log('IN ROOM: ', clientRoom, 'PLAYER NUM: ', rooms[clientRoom].connected[socket.id], ' LEFT');
+        game.leaveGame(rooms[clientRoom].connected[socket.id]);
+        delete rooms[clientRoom].connected[socket.id];
+      }
     }
-    console.log('CONNECTED: ', connected);
     console.log('user disconnected');
   });
 });
+
 
 http.listen(3000, () => {
   console.log('listening on *:3000');

@@ -7,13 +7,13 @@ const App = (props) => {
   const [pos, setPos] = useState([200, 200]);
   const [player, setPlayer] = useState(null);
   const [ballPos, setBallPos] = useState([347, 253]);
-  const [counter, setCounter] = useState(null);
+  const [gameText, setGameText] = useState(null);
 
   useEffect(() => {
     socket.login(setPlayer);
     socket.onPlayerPositionsUpdate(setPos);
     socket.onBallUpdate(setBallPos);
-    socket.onCounterDownUpdate(setCounter);
+    socket.onCounterDownUpdate(setGameText);
   }, []);
 
   const handleKey = (e) => {
@@ -22,7 +22,7 @@ const App = (props) => {
       if (newPos[player] < 420) {
         newPos[player] += 25;
       }
-      setPos(newPos);
+      // setPos(newPos);
       socket.movePlayer(player, 'down');
     }
     if (e.key === 'ArrowUp') {
@@ -30,13 +30,13 @@ const App = (props) => {
       if (newPos[player] > 0) {
         newPos[player] -= 25;
       }
-      setPos(newPos);
+      // setPos(newPos);
       socket.movePlayer(player, 'up');
     }
   };
 
   const reset = () => {
-    socket.resetGame();
+    socket.restartGame();
   };
 
   const playerName = () => {
@@ -60,7 +60,7 @@ const App = (props) => {
             leftPos={pos[0]}
             rightPos={pos[1]}
             ballPos={ballPos}
-            counter={counter}
+            gameText={gameText}
           />
         </sc.BoardWrapper>
         <div>
