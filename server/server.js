@@ -1,10 +1,15 @@
 const express = require('express');
 
+const morgan = require('morgan');
+
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const Game = require('./game');
 
+const port = process.env.PORT || 3000;
+
+app.use(morgan('tiny'));
 app.use('/:id', express.static('public'));
 
 const rooms = {};
@@ -70,6 +75,6 @@ io.on('connection', (socket) => {
 });
 
 
-http.listen(3000, () => {
+http.listen(port, () => {
   console.log('listening on *:3000');
 });
