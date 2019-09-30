@@ -62,7 +62,7 @@ const App = () => {
     return (
       <sc.App>
         <div>
-          <Header header={users} player={player} />
+          <Header users={users} player={player} />
         </div>
         <sc.FlexDiv>
           <GameText gameText={gameText} />
@@ -72,19 +72,19 @@ const App = () => {
             ballPos={ballPos}
             gameText={gameText}
           />
+          <UsersList users={users} />
           <Chat chat={chat} />
         </sc.FlexDiv>
         <div>
-          <span>
+          <b>
             {`YOU ARE ${playerName()}`}
-          </span>
+          </b>
         </div>
         <div>
           <button type="button" onClick={reset}>
             reset
           </button>
         </div>
-        <UsersList users={users} />
       </sc.App>
     );
   }

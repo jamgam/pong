@@ -9,23 +9,28 @@ const Chat = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // if (value) {
-    postMessage(value);
-    setValue('');
-    // }
+    if (value) {
+      postMessage(value);
+      setValue('');
+    }
   };
 
   const handleChange = (e) => {
-    setValue(e.target.value);
+    if (e.target.value.length <= 255) {
+      setValue(e.target.value);
+    }
   };
 
   return (
     <sc.Chat>
+      <sc.Heading>
+        CHAT MESSAGES:
+      </sc.Heading>
       <sc.Messages>
-        {chat.map((msg) => <Message msg={msg} />)}
+        {chat.map((msg) => <Message key={msg.timeStamp} msg={msg} />)}
       </sc.Messages>
       <form onSubmit={handleSubmit}>
-        <input onChange={handleChange} value={value} type="text" />
+        <sc.Input onChange={handleChange} value={value} type="text" />
       </form>
     </sc.Chat>
   );

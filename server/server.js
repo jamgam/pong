@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
   let game;
   let clientRoom;
 
-  socket.on('join', (room) => {
+  socket.on('join', ({ room, user }) => {
     socket.join(room);
     clientRoom = room;
     if (rooms[room] === undefined) {
@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
       rooms[room].numClients += 1;
     }
     const player = game.addPlayer(socket.id);
-    rooms[room].connected[socket.id] = player;
+    rooms[room].connected[socket.id] = { player, user };
     io.to(room).emit('usersList', rooms[room].connected);
     io.to(room).emit('chatMessage', rooms[clientRoom].messages);
     socket.emit('loggedIn', player);
@@ -67,7 +67,8 @@ io.on('connection', (socket) => {
   socket.on('message', (msg) => {
     console.log(msg);
     rooms[clientRoom].messages.push({
-      user: socket.id,
+      timeStamp: Date.now(),
+      user: rooms[clientRoom].connected[socket.id].user,
       msg,
     });
     io.to(clientRoom).emit('chatMessage', rooms[clientRoom].messages);
@@ -81,7 +82,9 @@ io.on('connection', (socket) => {
         console.log('ROOM DELETED: ', clientRoom);
       } else {
         console.log('IN ROOM: ', clientRoom, 'PLAYER NUM: ', rooms[clientRoom].connected[socket.id], ' LEFT');
-        game.leaveGame(rooms[clientRoom].connected[socket.id]);
+        if (game) {
+          game.leaveGame(rooms[clientRoom].connected[socket.id]);
+        }
         delete rooms[clientRoom].connected[socket.id];
         io.to(clientRoom).emit('usersList', rooms[clientRoom].connected);
       }

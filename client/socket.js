@@ -2,11 +2,14 @@ import openSocket from 'socket.io-client';
 
 const socket = openSocket(`${location.protocol}//${location.host}`);
 
+const user = window.prompt('Choose a name') || 'anon';
+
+console.log(user);
 export const login = (cb) => {
   let roomNum = document.URL.split('/');
   roomNum = roomNum[roomNum.length - 2];
   console.log('JOINED: ', roomNum);
-  socket.emit('join', roomNum);
+  socket.emit('join', { roomNum, user });
   socket.on('loggedIn', (player) => {
     cb(player);
     console.log('YOU ARE PLAYER: ', player);

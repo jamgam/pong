@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-// import { onUsersUpdate } from '../socket';
+import User from './User';
+import * as sc from '../styled-components/sc.UsersList';
 
 
 const UsersList = (props) => {
   const { users } = props;
 
   return (
-    <div>
-      {JSON.stringify(users)}
-    </div>
+    <sc.Users>
+      <sc.Heading>
+          CONNECTED USERS:
+      </sc.Heading>
+      {Object.keys(users).map((user) => <User user={users[user]} />)}
+    </sc.Users>
   );
 };
 export default UsersList;

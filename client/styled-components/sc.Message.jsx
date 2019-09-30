@@ -5,4 +5,5 @@ font-weight: 800;
 `;
 
 export const Msg = styled.span`
+word-break: break-all;
 `;
