@@ -28,8 +28,13 @@ const Game = function Game(emitBall, emitPlayer, emitCounter) {
 };
 
 Game.prototype.startGame = function startGame() {
+  this.ballPosition[0] = 346;
   this.ballPosition[1] = Math.floor(Math.random() * 495);
   this.ballDirection = 'upright';
+  this.counter = 3;
+  this.step = 3;
+  this.gameover = false;
+
   this.emitBall(this.ballPosition);
   this.countDown();
 };
@@ -37,7 +42,6 @@ Game.prototype.startGame = function startGame() {
 Game.prototype.countDown = function countDown() {
   const i = setInterval(() => {
     this.emitCounter(this.counter);
-    console.log(this.counter);
     if (this.counter === 0) {
       clearInterval(i);
       setTimeout(() => {
@@ -143,7 +147,10 @@ Game.prototype.endGame = function endGame() {
 };
 
 Game.prototype.restartGame = function restartGame() {
-
+  this.endGame();
+  setTimeout(() => {
+    this.startGame();
+  }, this.speed);
 };
 
 module.exports = Game;
