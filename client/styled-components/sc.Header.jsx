@@ -4,7 +4,7 @@ export const Header = styled.div`
 font-weight: 800;
 font-family: Courier New;
 display: inline-block;
-width: 702px;
+width: 700px;
 `;
 
 export const Left = styled.span`
