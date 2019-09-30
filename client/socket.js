@@ -4,7 +4,8 @@ const socket = openSocket(`${location.protocol}//${location.host}`);
 
 export const login = (cb) => {
   let roomNum = document.URL.split('/');
-  roomNum = roomNum[roomNum.length - 1];
+  roomNum = roomNum[roomNum.length - 2];
+  console.log('JOINED: ', roomNum);
   socket.emit('join', roomNum);
   socket.on('loggedIn', (player) => {
     cb(player);
