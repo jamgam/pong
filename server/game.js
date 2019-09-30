@@ -33,9 +33,18 @@ const Game = function Game(emitBall, emitPlayer, emitText, room) {
 };
 
 Game.prototype.startGame = function startGame() {
+  const rand = Math.random();
   this.ballPosition[0] = 346;
-  this.ballPosition[1] = Math.floor(Math.random() * 495);
-  this.ballDirection = 'upright';
+  this.ballPosition[1] = Math.floor(rand * 495);
+  if (rand < 0.25) {
+    this.ballDirection = 'upright';
+  } else if (rand >= 0.25 && rand < 0.50) {
+    this.ballDirection = 'upleft';
+  } else if (rand >= 0.50 && rand < 0.75) {
+    this.ballDirection = 'downleft';
+  } else {
+    this.ballDirection = 'downright';
+  }
   this.counter = 3;
   this.step = 3;
 
