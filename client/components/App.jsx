@@ -81,9 +81,11 @@ const App = () => {
           </b>
         </div>
         <div>
-          <button type="button" onClick={reset}>
+          {player < 3 ? (
+            <button type="button" onClick={reset}>
             reset
-          </button>
+            </button>
+          ) : null}
         </div>
       </sc.App>
     );
