@@ -8,7 +8,7 @@
     "startdev": "nodemon server/server.js",
     "start": "node server/server.js",
     "buildD": "webpack --mode=development --watch",
-    "buildP": "webpack --mode=production"
+    "postinstall": "webpack --mode-production"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +16,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "express": "^4.17.1",
-    "nodemon": "^1.19.2",
+    "prop-types": "^15.7.2",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
     "socket.io": "^2.3.0",
@@ -25,6 +25,7 @@
     "styled-components": "^4.4.0"
   },
   "devDependencies": {
+    "nodemon": "^1.19.2",
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",

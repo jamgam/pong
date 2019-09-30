@@ -1,11 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import * as sc from '../styled-components/sc.Player';
 
 
-const Player = (props) => (
-  <div>
-    <sc.Paddle player={props.player} position={props.pos} />
-  </div>
-);
+const Player = (props) => {
+  const { player, pos } = props;
+
+  return (
+    <div>
+      <sc.Paddle player={player} position={pos} />
+    </div>
+  );
+};
 
 export default Player;

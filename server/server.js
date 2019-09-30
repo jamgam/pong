@@ -27,7 +27,6 @@ io.on('connection', (socket) => {
   let game;
   let clientRoom;
 
-  // join room
   socket.on('join', (room) => {
     socket.join(room);
     clientRoom = room;
@@ -41,15 +40,14 @@ io.on('connection', (socket) => {
     }
     const player = game.addPlayer(socket.id);
     rooms[room].connected[socket.id] = player;
+    io.to(room).emit('usersList', rooms[room].connected);
     socket.emit('loggedIn', player);
   });
 
-  // move
   socket.on('movePlayer', ({ player, direction }) => {
     game.movePlayer(player, direction);
   });
 
-  // reset
   socket.on('restartGame', () => {
     game.restartGame();
   });
@@ -64,6 +62,7 @@ io.on('connection', (socket) => {
         console.log('IN ROOM: ', clientRoom, 'PLAYER NUM: ', rooms[clientRoom].connected[socket.id], ' LEFT');
         game.leaveGame(rooms[clientRoom].connected[socket.id]);
         delete rooms[clientRoom].connected[socket.id];
+        io.to(clientRoom).emit('usersList', rooms[clientRoom].connected);
       }
     }
     console.log('user disconnected');

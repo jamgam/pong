@@ -1,9 +1,10 @@
 import openSocket from 'socket.io-client';
 
-const socket = openSocket('http://localhost:3000');
+const socket = openSocket(`${location.protocol}//${location.host}`);
 
 export const login = (cb) => {
-  const roomNum = document.URL.split('/')[3];
+  let roomNum = document.URL.split('/');
+  roomNum = roomNum[roomNum.length - 1];
   socket.emit('join', roomNum);
   socket.on('loggedIn', (player) => {
     cb(player);
@@ -34,5 +35,11 @@ export const restartGame = () => {
 export const onCounterDownUpdate = (cb) => {
   socket.on('gameText', (count) => {
     cb(count);
+  });
+};
+
+export const onUsersUpdate = (cb) => {
+  socket.on('usersList', (users) => {
+    cb(users);
   });
 };

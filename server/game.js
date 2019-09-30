@@ -9,11 +9,11 @@ const Game = function Game(emitBall, emitPlayer, emitText, room) {
   this.ballDirection = null;
   this.playerLength = 80;
   this.gameInterval = null;
-  this.player0 = null;
+  this.counterInterval = null;
   this.player1 = null;
-
-  //
+  this.player2 = null;
   this.room = room;
+  this.gameStarted = false;
 
   // game speed
   this.speed = 25;
@@ -38,32 +38,33 @@ Game.prototype.startGame = function startGame() {
   this.ballDirection = 'upright';
   this.counter = 3;
   this.step = 3;
-  this.gameover = false;
+  this.endGame();
 
   this.emitBall(this.room, this.ballPosition);
   this.countDown();
 };
 
 Game.prototype.countDown = function countDown() {
-  const i = setInterval(() => {
+  this.emitText(this.room, this.counter);
+  this.counterInterval = setInterval(() => {
     if (this.counter > 0) {
+      this.counter -= 1;
       this.emitText(this.room, this.counter);
     }
     if (this.counter === 0) {
       this.emitText(this.room, 'start!');
-      clearInterval(i);
+      clearInterval(this.counterInterval);
       setTimeout(() => {
         this.emitText(this.room, null);
       }, 400);
       this.playBall();
-    } else {
-      this.counter -= 1;
     }
   }, 1000);
 };
 
 Game.prototype.playBall = function playBall() {
   this.endGame();
+  this.gameStarted = true;
   this.gameInterval = setInterval(() => {
     // update ball position
     switch (this.ballDirection) {
@@ -79,7 +80,7 @@ Game.prototype.playBall = function playBall() {
             this.ballDirection = 'upleft';
             this.step += this.increment;
           } else {
-            this.gameover = true;
+            this.endGame();
           }
         }
         break;
@@ -95,7 +96,7 @@ Game.prototype.playBall = function playBall() {
             this.ballDirection = 'upright';
             this.step += this.increment;
           } else {
-            this.gameover = true;
+            this.endGame();
           }
         }
         break;
@@ -111,7 +112,7 @@ Game.prototype.playBall = function playBall() {
             this.ballDirection = 'downright';
             this.step += this.increment;
           } else {
-            this.gameover = true;
+            this.endGame();
           }
         }
         break;
@@ -127,7 +128,7 @@ Game.prototype.playBall = function playBall() {
             this.ballDirection = 'downleft';
             this.step += this.increment;
           } else {
-            this.gameover = true;
+            this.endGame();
           }
         }
         break;
@@ -136,11 +137,6 @@ Game.prototype.playBall = function playBall() {
 
     // update ball
     this.emitBall(this.room, this.ballPosition);
-
-    // check conditions
-    if (this.gameover) {
-      this.endGame();
-    }
   }, this.speed);
 };
 
@@ -150,21 +146,28 @@ Game.prototype.movePlayer = function movePlayer(player, direction) {
       case 'up':
         if (this.playerPositions[player] > 0) {
           this.playerPositions[player] -= 25;
+          this.updatePlayerPositons();
         }
         break;
       case 'down':
         if (this.playerPositions[player] < 420) {
           this.playerPositions[player] += 25;
+          this.updatePlayerPositons();
         }
         break;
       default:
     }
-    this.updatePlayerPositons();
+    // this.updatePlayerPositons();
   }
 };
 
 Game.prototype.endGame = function endGame() {
+  if (this.gameStarted) {
+    this.emitText(this.room, null);
+  }
   clearInterval(this.gameInterval);
+  clearInterval(this.counterInterval);
+  this.gameStarted = false;
 };
 
 Game.prototype.updatePlayerPositons = function updatePlayerPositons() {
@@ -179,16 +182,16 @@ Game.prototype.restartGame = function restartGame() {
 };
 
 Game.prototype.addPlayer = function addPlayer(id) {
-  let playerNum = 2;
-  if (this.player0 === null) {
-    this.player0 = id;
-    playerNum = 0;
-  } else if (this.player1 === null) {
+  let playerNum = 3;
+  if (this.player1 === null) {
     this.player1 = id;
     playerNum = 1;
+  } else if (this.player2 === null) {
+    this.player2 = id;
+    playerNum = 2;
   }
 
-  if (this.player0 && this.player1) {
+  if (playerNum !== 3 && this.player1 && this.player2) {
     this.startGame();
   }
   return playerNum;
@@ -196,7 +199,7 @@ Game.prototype.addPlayer = function addPlayer(id) {
 
 Game.prototype.leaveGame = function leaveGame(playerNum) {
   console.log(playerNum, ' LEFT');
-  if (playerNum < 2) {
+  if (playerNum === 1 || playerNum === 2) {
     const player = `player${playerNum}`;
     this[player] = null;
     this.endGame();
