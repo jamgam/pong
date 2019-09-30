@@ -9,17 +9,19 @@ const Game = function Game(emitBall, emitPlayer, emitCounter) {
   this.ballDirection = null;
   this.playerLength = 80;
   this.gameInterval = null;
+  this.player0 = null;
+  this.player1 = null;
 
   // game speed
   this.speed = 25;
   this.step = 3;
-  this.increment = 0.25;
+  this.increment = 1;
 
   // board walls
   this.leftBound = 10;
   this.rightBound = 690;
   this.upperBound = 1;
-  this.lowerBound = 493;
+  this.lowerBound = 498;
 
   // emitters
   this.emitBall = emitBall;
@@ -55,6 +57,7 @@ Game.prototype.countDown = function countDown() {
 };
 
 Game.prototype.playBall = function playBall() {
+  this.endGame();
   this.gameInterval = setInterval(() => {
     // update ball position
     switch (this.ballDirection) {
@@ -63,7 +66,6 @@ Game.prototype.playBall = function playBall() {
         this.ballPosition[1] -= this.step;
         if (this.ballPosition[1] <= this.upperBound) {
           this.ballDirection = 'downright';
-          this.step += this.increment;
         }
         if (this.ballPosition[0] >= this.rightBound) {
           if (this.ballPosition[1] >= this.playerPositions[1]
@@ -80,11 +82,15 @@ Game.prototype.playBall = function playBall() {
         this.ballPosition[1] -= this.step;
         if (this.ballPosition[1] <= this.upperBound) {
           this.ballDirection = 'downleft';
-          this.step += this.increment;
         }
         if (this.ballPosition[0] <= this.leftBound) {
-          this.ballDirection = 'upright';
-          this.step += this.increment;
+          if (this.ballPosition[1] >= this.playerPositions[0]
+            && this.ballPosition[1] <= (this.playerPositions[0] + this.playerLength)) {
+            this.ballDirection = 'upright';
+            this.step += this.increment;
+          } else {
+            this.gameover = true;
+          }
         }
         break;
       case 'downleft':
@@ -92,11 +98,15 @@ Game.prototype.playBall = function playBall() {
         this.ballPosition[1] += this.step;
         if (this.ballPosition[1] >= this.lowerBound) {
           this.ballDirection = 'upleft';
-          this.step += this.increment;
         }
         if (this.ballPosition[0] <= this.leftBound) {
-          this.ballDirection = 'downright';
-          this.step += this.increment;
+          if (this.ballPosition[1] >= this.playerPositions[0]
+            && this.ballPosition[1] <= (this.playerPositions[0] + this.playerLength)) {
+            this.ballDirection = 'downright';
+            this.step += this.increment;
+          } else {
+            this.gameover = true;
+          }
         }
         break;
       case 'downright':
@@ -104,7 +114,6 @@ Game.prototype.playBall = function playBall() {
         this.ballPosition[1] += this.step;
         if (this.ballPosition[1] >= this.lowerBound) {
           this.ballDirection = 'upright';
-          this.step += this.increment;
         }
         if (this.ballPosition[0] >= this.rightBound) {
           if (this.ballPosition[1] >= this.playerPositions[1]
@@ -133,14 +142,18 @@ Game.prototype.movePlayer = function movePlayer(player, direction) {
   if (player < 2) {
     switch (direction) {
       case 'up':
-        this.playerPositions[player] -= 25;
+        if (this.playerPositions[player] > 0) {
+          this.playerPositions[player] -= 25;
+        }
         break;
       case 'down':
-        this.playerPositions[player] += 25;
+        if (this.playerPositions[player] < 420) {
+          this.playerPositions[player] += 25;
+        }
         break;
       default:
     }
-    this.emitPlayer(this.playerPositions);
+    this.updatePlayerPositons();
   }
 };
 
@@ -148,11 +161,39 @@ Game.prototype.endGame = function endGame() {
   clearInterval(this.gameInterval);
 };
 
+Game.prototype.updatePlayerPositons = function updatePlayerPositons() {
+  this.emitPlayer(this.playerPositions);
+};
+
 Game.prototype.restartGame = function restartGame() {
   this.endGame();
   setTimeout(() => {
     this.startGame();
   }, this.speed);
+};
+
+Game.prototype.addPlayer = function addPlayer(id) {
+  let playerNum = 2;
+  if (this.player0 === null) {
+    this.player0 = id;
+    playerNum = 0;
+  } else if (this.player1 === null) {
+    this.player1 = id;
+    playerNum = 1;
+  }
+
+  if (this.player0 && this.player1) {
+    this.startGame();
+  }
+  return playerNum;
+};
+
+Game.prototype.leaveGame = function leaveGame(playerNum) {
+  if (playerNum < 2) {
+    const player = `player${playerNum}`;
+    this[player] = null;
+    this.endGame();
+  }
 };
 
 module.exports = Game;

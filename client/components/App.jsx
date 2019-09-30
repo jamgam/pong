@@ -18,9 +18,19 @@ const App = (props) => {
 
   const handleKey = (e) => {
     if (e.key === 'ArrowDown') {
+      const newPos = [...pos];
+      if (newPos[player] < 420) {
+        newPos[player] += 25;
+      }
+      setPos(newPos);
       socket.movePlayer(player, 'down');
     }
     if (e.key === 'ArrowUp') {
+      const newPos = [...pos];
+      if (newPos[player] > 0) {
+        newPos[player] -= 25;
+      }
+      setPos(newPos);
       socket.movePlayer(player, 'up');
     }
   };

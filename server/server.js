@@ -12,13 +12,13 @@ let players = 0;
 
 const testGame = new Game(
   (ball) => {
-    io.sockets.emit('ball', ball);
+    io.emit('ball', ball);
   },
   (playerPos) => {
-    io.sockets.emit('update', playerPos);
+    io.emit('update', playerPos);
   },
   (counter) => {
-    io.sockets.emit('counter', counter);
+    io.emit('counter', counter);
   },
 );
 
@@ -26,16 +26,13 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   // login
   socket.on('login', () => {
-    socket.emit('loggedIn', players);
-    testGame.emitPlayer(testGame.playerPositions);
-    connected[socket.id] = 200;
+    const player = testGame.addPlayer(socket.id);
+    connected[socket.id] = player;
+    socket.emit('loggedIn', player);
+    testGame.updatePlayerPositons();
     players += 1;
     console.log(`USER: ${socket.id} logged in`);
-    if (players === 2) {
-      testGame.startGame((ball) => {
-        io.sockets.emit('ball', ball);
-      });
-    }
+    console.log('CONNECTED: ', connected);
   });
 
   // move
@@ -49,16 +46,14 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    if (connected[socket.id]) {
+    if (connected[socket.id] !== undefined) {
       console.log(`USER: ${socket.id} logged out`);
-      delete connected[socket.io];
+      testGame.leaveGame(connected[socket.id]);
+      delete connected[socket.id];
       players -= 1;
-      if (players < 2) {
-        testGame.endGame();
-      }
+      console.log('PLAYERS: ', players);
     }
-
-    console.log('CONNECTED USERS: ', connected);
+    console.log('CONNECTED: ', connected);
     console.log('user disconnected');
   });
 });
