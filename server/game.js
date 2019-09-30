@@ -75,7 +75,7 @@ Game.prototype.playBall = function playBall() {
           this.ballDirection = 'downright';
         }
         if (this.ballPosition[0] >= this.rightBound) {
-          if (this.ballPosition[1] >= this.playerPositions[1]
+          if (this.ballPosition[1] >= this.playerPositions[1] - 8
              && this.ballPosition[1] <= (this.playerPositions[1] + this.playerLength)) {
             this.ballDirection = 'upleft';
             this.step += this.increment;
@@ -91,7 +91,7 @@ Game.prototype.playBall = function playBall() {
           this.ballDirection = 'downleft';
         }
         if (this.ballPosition[0] <= this.leftBound) {
-          if (this.ballPosition[1] >= this.playerPositions[0]
+          if (this.ballPosition[1] >= this.playerPositions[0] - 8
             && this.ballPosition[1] <= (this.playerPositions[0] + this.playerLength)) {
             this.ballDirection = 'upright';
             this.step += this.increment;
@@ -107,7 +107,7 @@ Game.prototype.playBall = function playBall() {
           this.ballDirection = 'upleft';
         }
         if (this.ballPosition[0] <= this.leftBound) {
-          if (this.ballPosition[1] >= this.playerPositions[0]
+          if (this.ballPosition[1] >= this.playerPositions[0] - 8
             && this.ballPosition[1] <= (this.playerPositions[0] + this.playerLength)) {
             this.ballDirection = 'downright';
             this.step += this.increment;
@@ -123,7 +123,7 @@ Game.prototype.playBall = function playBall() {
           this.ballDirection = 'upright';
         }
         if (this.ballPosition[0] >= this.rightBound) {
-          if (this.ballPosition[1] >= this.playerPositions[1]
+          if (this.ballPosition[1] >= this.playerPositions[1] - 8
              && this.ballPosition[1] <= (this.playerPositions[1] + this.playerLength)) {
             this.ballDirection = 'downleft';
             this.step += this.increment;
