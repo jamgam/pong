@@ -5,7 +5,6 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const Game = require('./game');
 
-
 app.use('/:id', express.static('public'));
 
 const connected = {};
@@ -28,6 +27,7 @@ io.on('connection', (socket) => {
   // login
   socket.on('login', () => {
     socket.emit('loggedIn', players);
+    testGame.emitPlayer(testGame.playerPositions);
     connected[socket.id] = 200;
     players += 1;
     console.log(`USER: ${socket.id} logged in`);
@@ -53,6 +53,9 @@ io.on('connection', (socket) => {
       console.log(`USER: ${socket.id} logged out`);
       delete connected[socket.io];
       players -= 1;
+      if (players < 2) {
+        testGame.endGame();
+      }
     }
 
     console.log('CONNECTED USERS: ', connected);

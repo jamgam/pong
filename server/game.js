@@ -130,16 +130,18 @@ Game.prototype.playBall = function playBall() {
 };
 
 Game.prototype.movePlayer = function movePlayer(player, direction) {
-  switch (direction) {
-    case 'up':
-      this.playerPositions[player] -= 25;
-      break;
-    case 'down':
-      this.playerPositions[player] += 25;
-      break;
-    default:
+  if (player < 2) {
+    switch (direction) {
+      case 'up':
+        this.playerPositions[player] -= 25;
+        break;
+      case 'down':
+        this.playerPositions[player] += 25;
+        break;
+      default:
+    }
+    this.emitPlayer(this.playerPositions);
   }
-  this.emitPlayer(this.playerPositions);
 };
 
 Game.prototype.endGame = function endGame() {

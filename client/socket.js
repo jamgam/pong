@@ -5,14 +5,7 @@ const socket = openSocket('http://localhost:3000');
 export const login = (cb) => {
   socket.emit('login', null);
   socket.on('loggedIn', (player) => {
-    if (player === 0) {
-      cb(player);
-      // cb2(1);
-    }
-    if (player === 1) {
-      cb(player);
-      // cb2(0);
-    }
+    cb(player);
     console.log('YOU ARE PLAYER: ', player);
   });
 };

@@ -29,10 +29,20 @@ const App = (props) => {
     socket.resetGame();
   };
 
+  const playerName = () => {
+    if (player === 0) {
+      return 'left';
+    }
+    if (player === 1) {
+      return 'right';
+    }
+    return 'a spectator';
+  };
+
   if (player === null) {
     return null;
   }
-  if (player < 2) {
+  if (player >= 0) {
     return (
       <div>
         <sc.BoardWrapper type="button" onKeyDown={handleKey}>
@@ -44,7 +54,7 @@ const App = (props) => {
           />
         </sc.BoardWrapper>
         <div>
-          {player ? 'you are right' : 'you are left'}
+          {`you are ${playerName()}`}
         </div>
         <div>
           <button type="button" onClick={reset}>
