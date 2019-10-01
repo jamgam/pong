@@ -2,3 +2,4 @@ node_modules
 yarn.lock
 public/main.js
 server/db/config.js
+yarn-error.log
