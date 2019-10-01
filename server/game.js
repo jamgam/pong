@@ -91,7 +91,8 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.emitResult(this.room, 'left');
+            this.resetBall();
+            this.emitResult(this.room, 'right');
           }
         }
         break;
@@ -108,7 +109,8 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.emitResult(this.room, 'right');
+            this.resetBall();
+            this.emitResult(this.room, 'left');
           }
         }
         break;
@@ -125,7 +127,8 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.emitResult(this.room, 'right');
+            this.resetBall();
+            this.emitResult(this.room, 'left');
           }
         }
         break;
@@ -142,7 +145,8 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.emitResult(this.room, 'left');
+            this.resetBall();
+            this.emitResult(this.room, 'right');
           }
         }
         break;

@@ -47,3 +47,7 @@ export const postMessage = (msg) => {
 export const onChatUpdate = (cb) => {
   socket.on('chatMessage', cb);
 };
+
+export const onResult = (cb) => {
+  socket.on('result', cb);
+};
