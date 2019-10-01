@@ -1,6 +1,14 @@
 const { Pool } = require('pg');
 const fs = require('fs');
-const config = require('./config');
+
+let config;
+
+try {
+  config = require('./config');
+} catch (err) {
+  console.log(err);
+}
+
 const hashUtils = require('../lib/hashUtils');
 
 let pool;
