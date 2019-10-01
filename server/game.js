@@ -35,8 +35,6 @@ const Game = function Game(emitBall, emitPlayer, emitText, emitResult, room) {
 
 Game.prototype.startGame = function startGame() {
   const rand = Math.random();
-  this.ballPosition[0] = 346;
-  this.ballPosition[1] = Math.floor(rand * 495);
   if (rand < 0.25) {
     this.ballDirection = 'upright';
   } else if (rand >= 0.25 && rand < 0.50) {
@@ -91,7 +89,6 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.resetBall();
             this.emitResult(this.room, 'right');
           }
         }
@@ -109,7 +106,6 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.resetBall();
             this.emitResult(this.room, 'left');
           }
         }
@@ -127,7 +123,6 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.resetBall();
             this.emitResult(this.room, 'left');
           }
         }
@@ -145,7 +140,6 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
-            this.resetBall();
             this.emitResult(this.room, 'right');
           }
         }
@@ -183,6 +177,7 @@ Game.prototype.endGame = function endGame() {
   if (this.countingDown) {
     this.emitText(this.room, null);
   }
+  this.resetBall();
   clearInterval(this.gameInterval);
   clearInterval(this.counterInterval);
 };
@@ -213,9 +208,6 @@ Game.prototype.addPlayer = function addPlayer(id) {
     playerNum = 2;
   }
 
-  if (playerNum !== 3 && this.player1 && this.player2) {
-    this.startGame();
-  }
   return playerNum;
 };
 

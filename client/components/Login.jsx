@@ -27,7 +27,7 @@ const Login = (props) => {
         <sc.Label>Password:</sc.Label>
         <input type="password" id="pass" value={pass} onChange={handleChange} required />
         <sc.Submit type="submit" value="Login" />
-        <button type="button">Register</button>
+        <sc.Button type="button">Signup</sc.Button>
       </form>
     </sc.Login>
   );

@@ -1,16 +1,60 @@
 const express = require('express');
-
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const Game = require('./game');
+const db = require('./db/index');
+const hashUtils = require('./lib/hashUtils');
+const auth = require('./lib/auth');
 
 const port = process.env.PORT || 3000;
 
 app.use(morgan('tiny'));
-app.use('/:id', express.static('public'));
+app.use(cookieParser());
+app.use(auth);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/rooms/:id', express.static('public'));
+app.get('/cookieTest', (req, res) => {
+  res.send(req.cookies);
+});
+
+app.post('/signup', (req, res) => {
+  let { user, pass } = req.body;
+  const salt = hashUtils.createRandom32String();
+  pass = hashUtils.createHash(pass, salt);
+  db.signUp(user, pass, salt)
+    .then((result) => {
+      res.send(result);
+    });
+});
+
+app.post('/login', (req, res) => {
+  const { user, pass } = req.body;
+  db.getUser(user)
+    .then((result) => {
+      const a = hashUtils.compareHash(pass, result.password, result.salt);
+      if (a) {
+        return db.login(req.session, result.id);
+      }
+      res.send(false);
+    })
+    .then((result) => {
+      res.send(result);
+    });
+});
+
+app.post('/logout', (req, res) => {
+  db.logout(req.session)
+    .then((result) => {
+      res.send(result);
+    });
+});
+
 
 const rooms = {};
 
@@ -69,9 +113,15 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('restartGame', () => {
+  socket.on('resetBall', () => {
     if (game) {
-      game.restartGame();
+      game.endGame();
+    }
+  });
+
+  socket.on('startGame', () => {
+    if (game) {
+      game.startGame();
     }
   });
 

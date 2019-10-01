@@ -15,6 +15,7 @@ const App = () => {
   const [gameText, setGameText] = useState(null);
   const [users, setUsers] = useState({});
   const [chat, setChat] = useState(['test']);
+  const [user, setUser] = useState('anon');
 
   useEffect(() => {
     socket.login(setPlayer);
@@ -43,7 +44,11 @@ const App = () => {
   };
 
   const reset = () => {
-    socket.restartGame();
+    socket.resetBall();
+  };
+
+  const start = () => {
+    socket.startGame();
   };
 
   const playerName = () => {
@@ -82,9 +87,14 @@ const App = () => {
             {`YOU ARE ${playerName()}`}
           </b>
           {player < 3 ? (
-            <sc.Restart type="button" onClick={reset}>
-            reset
-            </sc.Restart>
+            <span>
+              <sc.Button type="button" onClick={reset}>
+                Reset
+              </sc.Button>
+              <sc.Button type="button" onClick={start}>
+                Start
+              </sc.Button>
+            </span>
           ) : null}
         </sc.Footer>
       </sc.App>

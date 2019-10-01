@@ -16,20 +16,31 @@ export const login = (cb) => {
   });
 };
 
-export const onPlayerPositionsUpdate = (cb) => {
-  socket.on('playerPosition', cb);
-};
-
+// emitters
 export const movePlayer = (player, direction) => {
   socket.emit('movePlayer', { player, direction });
 };
 
-export const onBallUpdate = (cb) => {
-  socket.on('ballPosition', cb);
+export const postMessage = (msg) => {
+  socket.emit('message', msg);
 };
 
-export const restartGame = () => {
-  socket.emit('restartGame', true);
+export const startGame = () => {
+  socket.emit('startGame', null);
+};
+
+export const resetBall = () => {
+  socket.emit('resetBall', true);
+};
+
+
+// listeners
+export const onPlayerPositionsUpdate = (cb) => {
+  socket.on('playerPosition', cb);
+};
+
+export const onBallUpdate = (cb) => {
+  socket.on('ballPosition', cb);
 };
 
 export const onCounterDownUpdate = (cb) => {
@@ -38,10 +49,6 @@ export const onCounterDownUpdate = (cb) => {
 
 export const onUsersUpdate = (cb) => {
   socket.on('usersList', cb);
-};
-
-export const postMessage = (msg) => {
-  socket.emit('message', msg);
 };
 
 export const onChatUpdate = (cb) => {

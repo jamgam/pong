@@ -18,7 +18,8 @@ export const Footer = styled.div`
 width: 700px;
 `;
 
-export const Restart = styled.button`
+export const Button = styled.button`
+font-weight: 700;
 float: right;
 background-color: black;
 color: white;
