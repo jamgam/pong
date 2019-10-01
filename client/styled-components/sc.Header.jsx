@@ -9,17 +9,17 @@ width: 700px;
 
 export const Left = styled.span`
 float: left;
-width:33.33333%;
+width:40%;
 text-align:left;
 `;
 
 export const Right = styled.span`
 float: left;
-width:33.33333%;
+width:40%;
 text-align:right;
 `;
 export const Center = styled.span`
 float: left;
-width:33.33333%;
+width:20%;
 text-align:center;
 `;

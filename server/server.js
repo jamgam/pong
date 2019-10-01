@@ -26,6 +26,9 @@ const emitGameText = (room, gameText) => {
   io.to(room).emit('gameText', gameText);
 };
 
+const emitResult = (room, result) => {
+  io.to(room).emit('result', result);
+};
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -36,9 +39,17 @@ io.on('connection', (socket) => {
     socket.join(room);
     clientRoom = room;
     if (rooms[room] === undefined) {
-      game = new Game(emitBall, emitPlayerPosition, emitGameText, room);
+      game = new Game(emitBall,
+        emitPlayerPosition,
+        emitGameText,
+        emitResult,
+        room);
       rooms[room] = {
-        game, numClients: 1, connected: {}, messages: [],
+        game,
+        numClients: 1,
+        connected: {},
+        messages: [],
+        // users: {},
       };
       console.log('ROOM CREATED: ', room);
     } else {

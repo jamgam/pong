@@ -29,3 +29,7 @@ border: solid white 1px;
 box-shadow: 0 0 0 2px black;
 margin-right: 2px;
 `;
+
+export const HeaderWrapper = styled.div`
+width: 1538px;
+`;

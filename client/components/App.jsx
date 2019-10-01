@@ -3,6 +3,7 @@ import Board from './Board';
 import UsersList from './UsersList';
 import Header from './Header';
 import Chat from './Chat';
+import Login from './Login';
 import GameText from './GameText';
 import * as sc from '../styled-components/sc.App';
 import * as socket from '../socket';
@@ -61,9 +62,10 @@ const App = () => {
   if (player >= 0) {
     return (
       <sc.App>
-        <div>
+        <sc.HeaderWrapper>
           <Header users={users} player={player} />
-        </div>
+          <Login />
+        </sc.HeaderWrapper>
         <sc.FlexDiv>
           <GameText gameText={gameText} />
           <Board

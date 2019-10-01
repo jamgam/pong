@@ -11,7 +11,7 @@ const UsersList = (props) => {
       <sc.Heading>
           CONNECTED USERS:
       </sc.Heading>
-      {Object.keys(users).map((user) => <User user={users[user]} />)}
+      {Object.keys(users).map((user) => <User key={user} user={users[user]} />)}
     </sc.Users>
   );
 };

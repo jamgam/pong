@@ -19,21 +19,20 @@ const Header = (props) => {
     }
   }
 
+  if (player === 1) {
+    left += '(YOU)';
+  }
+  if (player === 2) {
+    right = `(YOU)${right}`;
+  }
+
   return (
     <sc.Header>
       <sc.Left>
         {left}
       </sc.Left>
       <sc.Center>
-        <sc.Left>
-          {player === 1 ? '(YOU)' : '\u00A0'}
-        </sc.Left>
-        <sc.Center>
-          VS
-        </sc.Center>
-        <sc.Right>
-          {player === 2 ? '(YOU)' : '\u00A0'}
-        </sc.Right>
+        VS
       </sc.Center>
       <sc.Right player="right">
         {right}

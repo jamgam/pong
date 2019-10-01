@@ -1,4 +1,4 @@
-const Game = function Game(emitBall, emitPlayer, emitText, room) {
+const Game = function Game(emitBall, emitPlayer, emitText, emitResult, room) {
   // game state
   this.counter = 3;
   this.gameover = false;
@@ -21,7 +21,7 @@ const Game = function Game(emitBall, emitPlayer, emitText, room) {
   this.increment = 1;
 
   // board walls
-  this.leftBound = 10;
+  this.leftBound = 9;
   this.rightBound = 690;
   this.upperBound = 1;
   this.lowerBound = 499;
@@ -30,6 +30,7 @@ const Game = function Game(emitBall, emitPlayer, emitText, room) {
   this.emitBall = emitBall;
   this.emitPlayer = emitPlayer;
   this.emitText = emitText;
+  this.emitResult = emitResult;
 };
 
 Game.prototype.startGame = function startGame() {
@@ -90,6 +91,7 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
+            this.emitResult(this.room, 'left');
           }
         }
         break;
@@ -106,6 +108,7 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
+            this.emitResult(this.room, 'right');
           }
         }
         break;
@@ -122,6 +125,7 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
+            this.emitResult(this.room, 'right');
           }
         }
         break;
@@ -138,6 +142,7 @@ Game.prototype.playBall = function playBall() {
             this.step += this.increment;
           } else {
             this.endGame();
+            this.emitResult(this.room, 'left');
           }
         }
         break;
@@ -178,6 +183,11 @@ Game.prototype.endGame = function endGame() {
   clearInterval(this.counterInterval);
 };
 
+Game.prototype.resetBall = function resetBall() {
+  this.ballPosition = [346, 247];
+  this.emitBall(this.room, this.ballPosition);
+};
+
 Game.prototype.updatePlayerPositons = function updatePlayerPositons() {
   this.emitPlayer(this.room, this.playerPositions);
 };
@@ -206,7 +216,6 @@ Game.prototype.addPlayer = function addPlayer(id) {
 };
 
 Game.prototype.leaveGame = function leaveGame(playerNum) {
-  console.log(playerNum, ' LEFT');
   if (playerNum === 1 || playerNum === 2) {
     const player = `player${playerNum}`;
     this[player] = null;
