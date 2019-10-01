@@ -211,7 +211,9 @@ Game.prototype.addPlayer = function addPlayer(id) {
   return playerNum;
 };
 
-Game.prototype.leaveGame = function leaveGame(playerNum) {
+Game.prototype.leaveGame = function leaveGame(playerInfo) {
+  const playerNum = playerInfo.player;
+  console.log('player num', playerNum);
   if (playerNum === 1 || playerNum === 2) {
     const player = `player${playerNum}`;
     this[player] = null;

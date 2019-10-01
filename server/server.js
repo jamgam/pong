@@ -99,8 +99,6 @@ io.on('connection', (socket) => {
       game = rooms[room].game;
       rooms[room].numClients += 1;
     }
-
-    console.log('ROOMS: ', rooms);
     const player = game.addPlayer(socket.id);
     rooms[room].connected[socket.id] = { player, user };
     io.to(room).emit('usersList', rooms[room].connected);
