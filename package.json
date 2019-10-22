@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "startdev": "nodemon server/server.js",
+    "startD": "nodemon server/server.js",
     "start": "node server/server.js",
     "buildD": "webpack --mode=development --watch",
     "postinstall": "webpack --mode-production"

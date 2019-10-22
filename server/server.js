@@ -24,10 +24,10 @@ app.get('/cookieTest', (req, res) => {
 });
 
 app.post('/signup', (req, res) => {
-  let { user, pass } = req.body;
+  const { user, pass } = req.body;
   const salt = hashUtils.createRandom32String();
-  pass = hashUtils.createHash(pass, salt);
-  db.signUp(user, pass, salt)
+  const hashedPass = hashUtils.createHash(pass, salt);
+  db.signUp(user, hashedPass, salt)
     .then((result) => {
       res.send(result);
     });
@@ -58,6 +58,7 @@ app.post('/logout', (req, res) => {
 
 const rooms = {};
 
+// socket functions
 const emitBall = (room, ballPosition) => {
   io.to(room).emit('ballPosition', ballPosition);
 };
@@ -125,7 +126,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', (msg) => {
-    console.log(msg);
     rooms[clientRoom].messages.push({
       timeStamp: Date.now(),
       user: rooms[clientRoom].connected[socket.id].user,
@@ -139,9 +139,8 @@ io.on('connection', (socket) => {
       rooms[clientRoom].numClients -= 1;
       if (rooms[clientRoom].numClients === 0) {
         delete rooms[clientRoom];
-        console.log('ROOM DELETED: ', clientRoom);
       } else {
-        console.log('IN ROOM: ', clientRoom, 'PLAYER NUM: ', rooms[clientRoom].connected[socket.id], ' LEFT');
+        // console.log('IN ROOM: ', clientRoom, 'PLAYER NUM: ', rooms[clientRoom].connected[socket.id], ' LEFT');
         if (game) {
           game.leaveGame(rooms[clientRoom].connected[socket.id]);
         }

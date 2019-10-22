@@ -26,7 +26,7 @@ const Chat = (props) => {
       <sc.Heading>
         CHAT MESSAGES:
       </sc.Heading>
-      <sc.Messages>
+      <sc.Messages id="msgs">
         {chat.map((msg) => <Message key={msg.timeStamp} msg={msg} />)}
       </sc.Messages>
       <form onSubmit={handleSubmit}>

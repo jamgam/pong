@@ -17,6 +17,12 @@ const Login = (props) => {
     e.preventDefault();
     setUser('');
     setPass('');
+    console.log(e.target);
+  };
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    console.log(e.target);
   };
 
   return (
@@ -26,8 +32,8 @@ const Login = (props) => {
         <input type="text" name="user" id="user" value={user} onChange={handleChange} required />
         <sc.Label>Password:</sc.Label>
         <input type="password" id="pass" value={pass} onChange={handleChange} required />
-        <sc.Submit type="submit" value="Login" />
-        <sc.Button type="button">Signup</sc.Button>
+        <sc.Submit id="login" type="submit" value="Login" />
+        <sc.Submit id="signup" type="submit" value="Signup" onClick={handleSignup} />
       </form>
     </sc.Login>
   );

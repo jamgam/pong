@@ -24,6 +24,7 @@ const App = () => {
     socket.onCounterDownUpdate(setGameText);
     socket.onUsersUpdate(setUsers);
     socket.onChatUpdate(setChat);
+    socket.onChatUpdate(handleChatUpdate);
   }, []);
 
   useEffect(() => {
@@ -33,6 +34,14 @@ const App = () => {
       });
     }
   }, [player]);
+
+  const handleChatUpdate = (value) => {
+    setChat(value);
+    const chatDiv = document.getElementById('msgs');
+    if (chatDiv) {
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+  };
 
   const handleKey = (e) => {
     if (e.key === 'ArrowDown') {

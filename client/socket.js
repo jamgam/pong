@@ -2,7 +2,7 @@ import openSocket from 'socket.io-client';
 
 const socket = openSocket(`${location.protocol}//${location.host}`);
 
-const user = window.prompt('Choose a name') || 'anon';
+const user = 'anon';
 
 console.log(user);
 export const login = (cb) => {
