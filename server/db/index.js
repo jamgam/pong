@@ -35,7 +35,8 @@ pool
 
 
 module.exports.signUp = (user, passwordHash, salt) => pool
-  .query('INSERT INTO users(username, password, salt) VALUES($1, $2, $3)', [user, passwordHash, salt])
+  .query('INSERT INTO users(username, password, salt) VALUES($1, $2, $3) RETURNING id', [user, passwordHash, salt])
+  .then((results) => results.rows[0])
   .catch((err) => err.detail);
 
 module.exports.getUser = (user) => pool
@@ -60,5 +61,9 @@ module.exports.login = (sessionHash, userId) => pool.query('UPDATE sessions SET 
   .catch((err) => err.detail);
 
 
-module.exports.logout = (sessionHash) => pool.query('DELETE FROM sessions WHERE session_hash = ($1)', [sessionHash])
-  .catch((err) => err);
+module.exports.logout = (sessionHash) => pool.query('UPDATE sessions SET user_id = null WHERE session_hash = ($1)', [sessionHash])
+  .catch((err) => err.detail);
+
+module.exports.isLoggedIn = (sessionHash) => pool.query('SELECT u.username FROM users u, sessions s WHERE u.id = s.user_id AND session_hash = ($1)', [sessionHash])
+  .then((result) => result.rows[0].username)
+  .catch((err) => err.detail);

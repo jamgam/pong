@@ -33,4 +33,5 @@ margin-right: 2px;
 
 export const HeaderWrapper = styled.div`
 width: 1538px;
+align-items: center;
 `;

@@ -23,7 +23,7 @@ height: 23px;
 width: 65px;
 border: solid white 1px;
 box-shadow: 0 0 0 2px black;
-margin-right: 2px;
+margin-right: 5px;
 margin-bottom: 1px;
 `;
 
@@ -36,8 +36,9 @@ height: 23px;
 width: 65px;
 border: solid white 1px;
 box-shadow: 0 0 0 2px black;
-margin-right: 2px;
+margin-right: 5px;
 margin-bottom: 1px;
+display: ${(props) => (props.signup ? 'none' : 'inline-block')};
 `;
 
 export const UserInput = styled.input`
@@ -46,4 +47,8 @@ display: ${(props) => (props.signup ? 'none' : 'inline-block')};
 
 export const PassInput = styled.input`
 margin-right: 5px;
+`;
+
+export const LoggedInMessage = styled.span`
+padding-right: 10px;
 `;

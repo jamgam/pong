@@ -3,7 +3,7 @@ import Board from './Board';
 import UsersList from './UsersList';
 import Header from './Header';
 import Chat from './Chat';
-import Login from './Login';
+import Auth from './Auth';
 import GameText from './GameText';
 import * as sc from '../styled-components/sc.App';
 import * as socket from '../socket';
@@ -15,7 +15,8 @@ const App = () => {
   const [gameText, setGameText] = useState(null);
   const [users, setUsers] = useState({});
   const [chat, setChat] = useState(['test']);
-  const [user, setUser] = useState('anon');
+  const [loggedUser, setLoggedUser] = useState('anon');
+  const [loggedin, setLoggedin] = useState(false);
 
   useEffect(() => {
     socket.login(setPlayer);
@@ -78,7 +79,7 @@ const App = () => {
       <sc.App>
         <sc.HeaderWrapper>
           <Header users={users} player={player} />
-          <Login />
+          <Auth loggedin={loggedin} loggedUser={loggedUser} setLoggedin={setLoggedin} setLoggedUser={setLoggedUser} />
         </sc.HeaderWrapper>
         <sc.FlexDiv>
           <GameText gameText={gameText} />

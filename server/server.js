@@ -37,11 +37,11 @@ app.post('/login', (req, res) => {
   const { user, pass } = req.body;
   db.getUser(user)
     .then((result) => {
-      const a = hashUtils.compareHash(pass, result.password, result.salt);
-      if (a) {
+      const correctLogin = hashUtils.compareHash(pass, result.password, result.salt);
+      if (correctLogin) {
         return db.login(req.session, result.id);
       }
-      res.send(false);
+      return res.send(false);
     })
     .then((result) => {
       res.send(result);
@@ -62,7 +62,10 @@ app.post('/logout', (req, res) => {
 });
 
 app.get('/sessionStatus', (req, res) => {
-
+  db.isLoggedIn(req.session)
+    .then((result) => {
+      res.send(result);
+    });
 });
 
 
