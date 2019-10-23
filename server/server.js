@@ -45,6 +45,9 @@ app.post('/login', (req, res) => {
     })
     .then((result) => {
       res.send(result);
+    })
+    .catch((err) => {
+      res.send(err);
     });
 });
 
@@ -52,7 +55,14 @@ app.post('/logout', (req, res) => {
   db.logout(req.session)
     .then((result) => {
       res.send(result);
+    })
+    .catch((err) => {
+      res.send(err);
     });
+});
+
+app.get('/sessionStatus', (req, res) => {
+
 });
 
 
